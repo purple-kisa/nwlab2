@@ -23,6 +23,10 @@ def index():
 def cakes():
     return 'Yummy cakes!'
 
+@app.route('/contact')
+def contact(): 
+    return render_template('contact.html')
+
 @app.route('/hello/<name>')
 def hello(name): 
     if name=="shaun": 
