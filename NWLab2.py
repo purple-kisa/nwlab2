@@ -5,6 +5,7 @@
 
 from flask import Flask, render_template, request
 from random import randint
+import requests
 
 app = Flask(__name__) 
 
@@ -35,9 +36,12 @@ def hello(name):
 
 @app.route('/gifsandimgs')
 def gifsandimgs(): 
-    giflinks = ["https://myanimelist.cdn-dena.com/images/anime/11/79410.jpg", "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif",                          "https://media.giphy.com/media/13CoXDiaCcCoyk/giphy.gif",                          "https://media4.giphy.com/media/a34HjLEsKchWM/200w.gif",                          "https://media.giphy.com/media/5i7umUqAOYYEw/giphy.gif", "https://media.giphy.com/media/OmK8lulOMQ9XO/giphy.gif"]
-    giflink = giflinks[randint(0, len(giflinks)-1)]
-    return render_template('gifsandimgs.html', giflink=giflink)
+    apilink = "http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=meow&rating=pg-13"
+
+    r = requests.get(apilink) 
+        
+    imgurl = r.json()['data']['image_url']
+    return render_template('gifsandimgs.html', imgurl=imgurl)
 
 
 
