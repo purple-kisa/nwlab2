@@ -28,6 +28,15 @@ def cakes():
 def contact(): 
     return render_template('contact.html')
 
+@app.route('/submit', methods = ['POST', 'GET'])
+def submit():
+    if request.method == 'POST':
+        submitname = request.form.get('submitname')
+        if submitname!=None:
+            return render_template('submitname.html', submitname=submitname)
+        else:
+            return render_template('htmltemplate.html')
+
 @app.route('/hello/<name>')
 def hello(name): 
     if name=="shaun": 
