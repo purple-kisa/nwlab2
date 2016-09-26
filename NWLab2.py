@@ -12,17 +12,10 @@ app = Flask(__name__)
 @app.route('/')
 def index(): 
     stuffsaid = request.args.get('stuffsaid')
-    helloname = request.args.get('helloname') 
-    if helloname!=None: 
-        return hello(helloname)
     if stuffsaid!=None:
         return render_template('stuffsaid.html', stuffsaid=stuffsaid)
     else:
         return render_template('htmltemplate.html')
-
-@app.route('/cakes')
-def cakes():
-    return 'Yummy cakes!'
 
 @app.route('/contact')
 def contact(): 
@@ -36,12 +29,6 @@ def submit():
             return render_template('submitname.html', submitname=submitname)
         else:
             return render_template('htmltemplate.html')
-
-@app.route('/hello/<name>')
-def hello(name): 
-    if name=="shaun": 
-        name = "shaun the uncool"
-    return render_template('namepage.html', name=name)
 
 @app.route('/gifsandimgs')
 def gifsandimgs(): 
