@@ -1,3 +1,8 @@
+# 50.012 NETWORKS LAB 2 
+# Done by: 
+# Hazel Lau (1001150)
+# Samuel Lim (1000971) 
+
 
 # coding: utf-8
 
