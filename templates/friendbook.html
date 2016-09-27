@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,7 +10,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
 
-    <title>MEOW </title>
+    <title>FRIEND BOOK</title>
 
     <!-- Bootstrap core CSS -->
     <link href="static/assets/css/bootstrap.css" rel="stylesheet">
@@ -55,17 +57,29 @@
 		<div class="row mt">	
 			<div class="col-lg-8 col-lg-offset-2">
 
-                <h1>Welcome!</h1>
+                <h1>Your Friend Book</h1>
 
-                <h2><a href="/friendbook">Your friend book</a></h2>
+                <table border = 1 cellpadding = '5'> 
+                    <tr> 
+                        <th><b>Name</b></th> 
+                        <th>Address</td>
+                        <th>Phone No.</td>
+                        <th>Email</td>
+                        <th>Birthday</td>
+
+                    {% for key, value in fb.iteritems() %}
+                        <tr> 
+                            <th> {{ key }}</th>
+                            {% for item in value %} 
+                                <td> {{ item }} </td>
+                            {% endfor %}
+                        <tr>
+                    {% endfor %}
+                </table>
+
                 <br>
-                <br>
 
-                <form> 
-                    Say something (then press enter):
-                    <input type="text" name="stuffsaid">
-                </form>
-
+                <a href="/">← Go back!</a>
 			</div>
 		</div><!-- /row -->
 	</div><!-- /container -->
