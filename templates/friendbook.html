@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -69,7 +67,7 @@
 
                     {% for key, value in fb.iteritems() %}
                         <tr> 
-                            <th> {{ key }}</th>
+                            <th id={{ key }}> {{ key }}</th>
                             {% for item in value %} 
                                 <td> {{ item }} </td>
                             {% endfor %}
@@ -78,6 +76,78 @@
                 </table>
 
                 <br>
+
+                <button type="submmit" id="addfriend" onclick="toggleShowAddFriend()">Add friend</button>
+                <button type="submit" id="deletefriend" onclick="toggleShowDeleteFriend()">Delete friend</button> 
+                <button type="submit" id="updatefriend" onclick="toggleShowUpdateFriend()">Update friend's details</button>
+
+
+                  <div id="addfrienddiv" class="container pt" style="display:none;">
+                  <div class="row mt">	
+                    <div class="col-lg-8 col-lg-offset-2">
+                      <form role="form" action = "http://localhost:5000/friendbook" method = "POST">
+                        <div class="form-group">
+                          <input name="submitname" type="name" class="form-control" id="NameInputEmail1" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                          <input type="name" class="form-control" name="address" placeholder="Address">
+                        </div>
+                        <div class="form-group">
+                          <input class="form-control" name="phoneno" placeholder="Phone No.">
+                        </div>
+                        <div class="form-group">
+                          <input class="form-control" type="email" name="email" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                          <input class="form-control" name="birthday" placeholder="Birthday">
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Add Friend</button>
+                      </form>    			
+                    </div>
+                  </div><!-- /row -->
+                </div><!-- /container -->
+
+                  <div id="deletefrienddiv" class="container pt" style="display:none;">
+                  <div class="row mt">	
+                    <div class="col-lg-8 col-lg-offset-2">
+                      <form role="form" action = "http://localhost:5000/friendbook" method = "GET">
+                        <div class="form-group">
+                          <!--ADD THE NAMES OF EACH PERSON IN FB-->
+                        <!--<select id="deletefriends"> 
+                          {% for key, value in fb.iteritems() %}
+                            <option value={{ key }}>{{ key}}</option>
+                          {% endfor %}
+                        </select>-->
+
+                          <input class="form-control" name="deletename" placeholder="Name">
+                                                   
+                        </div>
+                        <button type="submit" class="btn btn-success">Delete Friend</button>
+                      </form>    			
+                    </div>
+                  </div><!-- /row -->
+                </div><!-- /container -->
+
+                  <div id="updatefrienddiv" class="container pt" style="display:none;">
+                  <div class="row mt">	
+                    <div class="col-lg-8 col-lg-offset-2">
+                          <!--ADD THE NAMES OF EACH PERSON IN FB-->
+                        <select id="updatefriends"> 
+                          {% for key, value in fb.iteritems() %}
+                            <option value={{ key }}>{{ key}}</option>
+                          {% endfor %}
+                        </select> 
+                        <input class = "form-control" id="updateadd" placeholder="New Address">
+                        <input class = "form-control" id="updatephoneno" placeholder="New Phone Number">
+                        <input class = "form-control" id="updateemail" placeholder="New Email">
+                        <input class = "form-control" id="updatebirthday" placeholder = "New Birthday">
+                      <button onclick = "putFriend()" class="btn btn-success">Update Details</button>
+                    </div>
+                  </div><!-- /row -->
+                </div><!-- /container -->
+                
+                <br>                
 
                 <a href="/">← Go back!</a>
 			</div>
@@ -95,6 +165,7 @@
 
     </body>
 
-
+<script src="/static/common.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
 </html>

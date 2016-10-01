@@ -1,4 +1,4 @@
-# 50.012 NETWORKS LAB 2 
+# 50.012 NETWORKS LAB 3 
 # Done by: 
 # Hazel Lau (1001150)
 # Samuel Lim (1000971) 
@@ -7,9 +7,10 @@
 
 # In[ ]:
 
-from flask import Flask, render_template, request, url_for, Response, json
+from flask import Flask, render_template, request, url_for, Response, json, jsonify
 from random import randint
 import requests
+from functools import wraps 
 
 app = Flask(__name__) 
 
@@ -20,6 +21,32 @@ fb['Shonz'] = ['59 09-smth', '+6591234567', 'shonz@meow.com', '26th October']
 fb['Js'] = ['Punggol', '+6591234567', 'js@meow.com', '26th January']
 fb['Junqi'] = ['Bedok', '+6591234567', 'junqi@meow.com', 'March']
 
+def check_auth(username, password): 
+    return username == 'admin' and password == 'secret'
+
+def authenticate(): 
+    message = {'message': 'Authenticate.'}
+    resp = jsonify(message)
+    resp.status_code = 401
+    resp.headers[ 'WWW-Authenticate'] = 'Basic realm = "Example"'
+    return resp 
+
+def requires_auth(f): 
+    @wraps(f) 
+    def decorated(*args, **kwargs): 
+        auth = request.authorization 
+        if not auth: 
+            return authenticate() 
+        elif not check_auth(auth.username, auth.password): 
+            return authenticate() 
+        return f(*args, **kwargs) 
+    return decorated
+
+@app.route('/secrets') 
+@requires_auth 
+def api_hello(): 
+    return "Shh this is my top secret spy stuff!!!!!"
+
 @app.route('/')
 def index(): 
     stuffsaid = request.args.get('stuffsaid')
@@ -28,12 +55,52 @@ def index():
     else:
         return render_template('htmltemplate.html')
 
-@app.route('/friendbook')
+@app.route('/friendbook', methods = ['POST', 'GET', 'PUT', 'PATCH'])
 def friendbook(): 
+    if request.method == 'POST': 
+        name = request.form.get('submitname')
+        add = request.form.get('address')
+        phone = request.form.get('phoneno')
+        email = request.form.get('email')
+        birthday = request.form.get('birthday')
+        if name!=None: 
+            fb[name] = [add, phone, email, birthday]  
+    elif request.method == 'GET': 
+        deletename =  request.args.get('deletename') 
+        api_deletename(deletename)
+    elif request.method == 'PUT': 
+        name = request.args.get('name')
+        add = request.args.get('add')
+        phone = request.args.get('phoneno')
+        email = request.args.get('email')
+        birthday = request.args.get('birthday')
+        if name!=None: 
+            fb[name]=[add, phone, email, birthday]
+            print name, fb[name]
+        else: 
+            print "no data received"
+
+    elif request.method == 'PATCH': 
+        name = request.args.get('name') 
+        add = request.args.get('add')
+        phone = request.args.get('phoneno')
+        email = request.args.get('email')
+        birthday = request.args.get('birthday')
+        if name!=None: 
+            if add!=None:
+                fb[name][0] = add
+            if phone!=None: 
+                fb[name][1] = phone 
+            if email!=None: 
+                fb[name][2] = email 
+            if birthday!=None: 
+                fb[name][3] = birthday
+        else: 
+            print "no data received"
     return render_template('friendbook.html', fb = fb)
 
 @app.route('/friendbook/<name>')
-def api_name(name):
+def api_getname(name):
     param = fb.get(name, None)
     if param!=None:
         data = {
@@ -50,6 +117,17 @@ def api_name(name):
     js = json.dumps(data)
     resp = Response(js, status = 200, mimetype='application/json')
     return resp
+
+@app.route('/deletefriend/<name>', methods = ['DELETE'])
+def api_deletename(name): 
+    param = fb.get(name,None) 
+    if param!=None: 
+        fb.pop(name, None)
+        resp = Response(status = 200)
+    else: 
+        resp = Response(status = 404)
+    return resp
+
 
 @app.route('/contact')
 def contact(): 
