@@ -68,7 +68,7 @@
                     {% for key, value in fb.iteritems() %}
                         <tr> 
                             <th id={{ key }}> {{ key }}</th>
-                            {% for item in value %} 
+                            {% for item in giflist %} 
                                 <td> {{ item }} </td>
                             {% endfor %}
                         <tr>
@@ -87,23 +87,24 @@
                     <div class="col-lg-8 col-lg-offset-2">
                       <form role="form" action = "http://localhost:5000/friendbook" method = "POST">
                         <div class="form-group">
-                          <input name="submitname" type="name" class="form-control" id="NameInputEmail1" placeholder="Name">
+                          <input name="submitname" type="name" class="form-control" id="addname" placeholder="Name">
                         </div>
                         <div class="form-group">
-                          <input type="name" class="form-control" name="address" placeholder="Address">
+                          <input type="name" class="form-control" name="address" placeholder="Address" id="addaddress">
                         </div>
                         <div class="form-group">
-                          <input class="form-control" name="phoneno" placeholder="Phone No.">
+                          <input class="form-control" name="phoneno" placeholder="Phone No." id="addphoneno">
                         </div>
                         <div class="form-group">
-                          <input class="form-control" type="email" name="email" placeholder="Email">
+                          <input class="form-control" type="email" name="email" placeholder="Email" id="addemail">
                         </div>
                         <div class="form-group">
-                          <input class="form-control" name="birthday" placeholder="Birthday">
+                          <input class="form-control" name="birthday" placeholder="Birthday" id="addbirthday">
                         </div>
 
-                        <button type="submit" class="btn btn-success">Add Friend</button>
+                        <button type="submit" class="btn btn-success">Add Friend (form)</button>
                       </form>    			
+                      <button type="submit" class="btn btn-success" onclick="postAddWithJson()">Add Friend (json)</button>
                     </div>
                   </div><!-- /row -->
                 </div><!-- /container -->

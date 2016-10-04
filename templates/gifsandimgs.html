@@ -56,6 +56,15 @@
 			<div class="col-lg-8 col-lg-offset-2">
 
                 <img src="{{ imgurl }}"/> <br><br>
+                
+                <br>
+
+                <b> Your previous searches: </b> 
+                <table>
+                  {% for item in giflist %} 
+                  <tr><td> {{ item }} </td></tr>
+                  {% endfor %}
+                </table>
 
                 <a href="/">← Go back!</a>
 			</div>

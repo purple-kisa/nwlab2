@@ -21,6 +21,8 @@ fb['Shonz'] = ['59 09-smth', '+6591234567', 'shonz@meow.com', '26th October']
 fb['Js'] = ['Punggol', '+6591234567', 'js@meow.com', '26th January']
 fb['Junqi'] = ['Bedok', '+6591234567', 'junqi@meow.com', 'March']
 
+favegifs = []
+
 def check_auth(username, password): 
     return username == 'admin' and password == 'secret'
 
@@ -50,35 +52,53 @@ def api_hello():
 @app.route('/')
 def index(): 
     stuffsaid = request.args.get('stuffsaid')
+    giftag = request.args.get('giftag')
     if stuffsaid!=None:
         return render_template('stuffsaid.html', stuffsaid=stuffsaid)
+    elif giftag!=None: 
+        favegifs.append(giftag)
+        return gifsandimgs(giftag) 
     else:
         return render_template('htmltemplate.html')
 
 @app.route('/friendbook', methods = ['POST', 'GET', 'PUT', 'PATCH'])
+@requires_auth
 def friendbook(): 
     if request.method == 'POST': 
-        name = request.form.get('submitname')
-        add = request.form.get('address')
-        phone = request.form.get('phoneno')
-        email = request.form.get('email')
-        birthday = request.form.get('birthday')
+        if request.headers['Content-Type'] == 'application/json':
+            req_json = request.get_json()
+            name = req_json["name"]
+            add = req_json["add"]
+            phone = req_json["phoneno"]
+            email = req_json["email"]
+            birthday = req_json["birthday"]
+        else:            
+            name = request.form.get('submitname')
+            add = request.form.get('address')
+            phone = request.form.get('phoneno')
+            email = request.form.get('email')
+            birthday = request.form.get('birthday')
         if name!=None: 
             fb[name] = [add, phone, email, birthday]  
     elif request.method == 'GET': 
         deletename =  request.args.get('deletename') 
         api_deletename(deletename)
     elif request.method == 'PUT': 
-        name = request.args.get('name')
-        add = request.args.get('add')
-        phone = request.args.get('phoneno')
-        email = request.args.get('email')
-        birthday = request.args.get('birthday')
+        if request.headers['Content-Type'] == 'application/json': 
+            req_json = request.get_json()
+            name = req_json["name"]
+            add = req_json["add"]
+            phone = req_json["phoneno"]
+            email = req_json["email"]
+            birthday = req_json["birthday"]
+        else:
+            name = request.args.get('name')
+            add = request.args.get('add')
+            phone = request.args.get('phoneno')
+            email = request.args.get('email')
+            birthday = request.args.get('birthday')
         if name!=None: 
             fb[name]=[add, phone, email, birthday]
-            print name, fb[name]
-        else: 
-            print "no data received"
 
     elif request.method == 'PATCH': 
         name = request.args.get('name') 
@@ -95,8 +115,6 @@ def friendbook():
                 fb[name][2] = email 
             if birthday!=None: 
                 fb[name][3] = birthday
-        else: 
-            print "no data received"
     return render_template('friendbook.html', fb = fb)
 
 @app.route('/friendbook/<name>')
@@ -119,6 +137,7 @@ def api_getname(name):
     return resp
 
 @app.route('/deletefriend/<name>', methods = ['DELETE'])
+@requires_auth
 def api_deletename(name): 
     param = fb.get(name,None) 
     if param!=None: 
@@ -143,13 +162,14 @@ def submit():
             return render_template('htmltemplate.html')
 
 @app.route('/gifsandimgs')
-def gifsandimgs(): 
-    apilink = "http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=meow&rating=pg-13"
+def gifsandimgs(giftag): 
+    apilink = "http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" + giftag + "&rating=pg-13"
 
     r = requests.get(apilink) 
-        
+    
     imgurl = r.json()['data']['image_url']
-    return render_template('gifsandimgs.html', imgurl=imgurl)
+    print(favegifs)
+    return render_template('gifsandimgs.html', imgurl=imgurl, giflist=favegifs)
 
 
 
