@@ -61,7 +61,7 @@ def index():
     else:
         return render_template('htmltemplate.html')
 
-@app.route('/friendbook', methods = ['POST', 'GET', 'PUT', 'PATCH'])
+@app.route('/friendbook', methods = ['POST', 'GET', 'PUT', 'PATCH', 'DELETE'])
 @requires_auth
 def friendbook(): 
     if request.method == 'POST': 
@@ -76,13 +76,19 @@ def friendbook():
             name = request.form.get('submitname')
             add = request.form.get('address')
             phone = request.form.get('phoneno')
-            email = request.form.get('email')
+            email = request.form.get('email') 
             birthday = request.form.get('birthday')
         if name!=None: 
             fb[name] = [add, phone, email, birthday]  
     elif request.method == 'GET': 
         deletename =  request.args.get('deletename') 
         api_deletename(deletename)
+    elif request.method =='DELETE':
+        if request.headers['Content-Type'] == 'application/json': 
+            req_json = request.get_json() 
+            print(req_json)
+            name = req_json["name"]
+            fb.pop(name, None)
     elif request.method == 'PUT': 
         if request.headers['Content-Type'] == 'application/json': 
             req_json = request.get_json()
@@ -99,7 +105,6 @@ def friendbook():
             birthday = request.args.get('birthday')
         if name!=None: 
             fb[name]=[add, phone, email, birthday]
-
     elif request.method == 'PATCH': 
         name = request.args.get('name') 
         add = request.args.get('add')
@@ -139,13 +144,14 @@ def api_getname(name):
 @app.route('/deletefriend/<name>', methods = ['DELETE'])
 @requires_auth
 def api_deletename(name): 
-    param = fb.get(name,None) 
-    if param!=None: 
-        fb.pop(name, None)
-        resp = Response(status = 200)
-    else: 
-        resp = Response(status = 404)
-    return resp
+    if request.method == 'DELETE':
+        param = fb.get(name,None) 
+        if param!=None: 
+            fb.pop(name, None)
+            resp = Response(status = 200)
+        else: 
+            resp = Response(status = 404)
+        return resp
 
 
 @app.route('/contact')

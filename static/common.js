@@ -70,3 +70,22 @@ function postAddWithJson() {
     })
 
 }
+
+function deleteWithJson() {
+    data = {
+        name : $("#deletefriends").val()
+
+    }
+    console.log(data)
+
+    $.ajax({
+        url: window.location.href, 
+        type: "DELETE", 
+        contentType: "application/json",
+        data: JSON.stringify(data), 
+        success: function() {
+            window.location.reload();
+        }
+    })
+
+}

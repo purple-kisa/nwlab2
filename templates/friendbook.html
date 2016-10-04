@@ -68,7 +68,7 @@
                     {% for key, value in fb.iteritems() %}
                         <tr> 
                             <th id={{ key }}> {{ key }}</th>
-                            {% for item in giflist %} 
+                            {% for item in value %} 
                                 <td> {{ item }} </td>
                             {% endfor %}
                         <tr>
@@ -115,17 +115,17 @@
                       <form role="form" action = "http://localhost:5000/friendbook" method = "GET">
                         <div class="form-group">
                           <!--ADD THE NAMES OF EACH PERSON IN FB-->
-                        <!--<select id="deletefriends"> 
+                        <select id="deletefriends"> 
                           {% for key, value in fb.iteritems() %}
                             <option value={{ key }}>{{ key}}</option>
                           {% endfor %}
-                        </select>-->
+                        </select>
 
-                          <input class="form-control" name="deletename" placeholder="Name">
+                          <!--<input class="form-control" name="deletename" placeholder="Name">-->
                                                    
                         </div>
-                        <button type="submit" class="btn btn-success">Delete Friend</button>
-                      </form>    			
+                      </form> 
+                    <button type="submit" onclick="deleteWithJson()" class="btn btn-success">Delete Friend</button>   			
                     </div>
                   </div><!-- /row -->
                 </div><!-- /container -->
